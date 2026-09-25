@@ -6,8 +6,9 @@ exports.uploadFile = (req, res) => {
     return res.status(400).json({ success: false, message: 'No image file uploaded' });
   }
 
-  // Generate accessible URL
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  // Generate accessible URL (accounting for Render/reverse proxy HTTPS)
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+  const fileUrl = `${protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
   res.status(200).json({
     success: true,
