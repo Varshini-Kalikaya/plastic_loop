@@ -50,7 +50,7 @@ const LandingPage = () => {
         </div>
 
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.1] text-[#14231b]">
-          Give Plastic a <span className="text-[#2d6a4f] underline decoration-[#a3d2af] decoration-wavy decoration-2">Second Life.</span>
+          Give Plastic a <span className="text-[#2d6a4f]">Second Life.</span>
         </h1>
 
         <p className="mt-6 text-base sm:text-xl text-[#526458] max-w-2xl mx-auto leading-relaxed font-normal">
