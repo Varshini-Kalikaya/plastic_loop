@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RefreshCw, Lock, Mail, ArrowRight, Zap, Leaf, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Zap, Leaf, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../../components/Logo';
 
 const LoginPage = () => {
   const { login, demoLogin } = useAuth();
@@ -47,14 +48,9 @@ const LoginPage = () => {
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#2d6a4f]/40 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
 
           <div>
-            <Link to="/" className="inline-flex items-center gap-2 mb-8">
-              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center border border-white/20">
-                <RefreshCw className="w-4 h-4 text-white animate-spin-slow" />
-              </div>
-              <span className="font-extrabold tracking-tight text-white text-base">
-                Plastic<span className="text-[#a3d2af]">Loop</span>
-              </span>
-            </Link>
+            <div className="mb-8">
+              <Logo to="/" variant="full" size="sm" inverted={true} />
+            </div>
 
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#a3d2af] block mb-2">
               Circular Economy

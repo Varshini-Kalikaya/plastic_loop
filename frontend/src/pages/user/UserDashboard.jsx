@@ -19,6 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 import API from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import DashboardBackgroundAnimation from '../../components/DashboardBackgroundAnimation';
 
 const UserDashboard = () => {
   const { user } = useAuth();
@@ -53,9 +54,12 @@ const UserDashboard = () => {
   const progressPercent = Math.min(100, Math.round((recycledKg / nextMilestoneKg) * 100));
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+    <div className="relative space-y-8 animate-fade-in max-w-7xl mx-auto">
+      {/* Background Animated Atmosphere (Scoped strictly to Dashboard) */}
+      <DashboardBackgroundAnimation />
+
       {/* 1. Large Editorial Welcome & Impact Hero */}
-      <div className="bg-white rounded-3xl border border-[#e2e8df] p-6 sm:p-10 shadow-sm relative overflow-hidden">
+      <div className="bg-white rounded-3xl border border-[#e2e8df] p-6 sm:p-10 shadow-sm relative z-10 overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#f0f7f2] rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
@@ -106,7 +110,7 @@ const UserDashboard = () => {
       </div>
 
       {/* 2. Horizontal Metrics Strip (Non-card-grid hierarchy) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-[#e2e8df] shadow-sm flex items-center gap-3.5">
           <div className="w-11 h-11 rounded-xl bg-[#fefce8] text-[#92400e] flex items-center justify-center border border-[#fef08a] shrink-0">
             <Award className="w-5 h-5" />
@@ -150,7 +154,7 @@ const UserDashboard = () => {
 
       {/* 3. Active Pickup Live Journey Tracker (Visual Journey) */}
       {activePickup && (
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#b8dfc4] shadow-sm space-y-6">
+        <div className="relative z-10 bg-white p-6 sm:p-8 rounded-3xl border border-[#b8dfc4] shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#edf2ec] pb-4">
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-2xl bg-[#edf6f0] text-[#1b4332] border border-[#cbe3d3]">
@@ -200,7 +204,7 @@ const UserDashboard = () => {
       )}
 
       {/* 4. Asymmetric Layout: Recent Activity (Left) + Eco Contributions & Quick Actions (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Recent Pickup Activity */}
         <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-[#e2e8df] shadow-sm space-y-5">
           <div className="flex items-center justify-between border-b border-[#edf2ec] pb-4">

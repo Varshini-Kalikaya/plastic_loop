@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RefreshCw, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../../components/Logo';
 
 const RegisterPage = () => {
   const { register } = useAuth();
@@ -35,11 +36,9 @@ const RegisterPage = () => {
     <div className="min-h-screen bg-[#fbfbf9] flex items-center justify-center p-4 sm:p-8 selection:bg-[#1b4332] selection:text-white">
       <div className="w-full max-w-xl bg-white rounded-3xl p-6 sm:p-10 border border-[#e2e8df] shadow-lg">
         <div className="text-center mb-6">
-          <Link to="/" className="inline-flex items-center gap-2 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-[#1b4332] flex items-center justify-center text-white shadow-sm">
-              <RefreshCw className="w-5 h-5 animate-spin-slow" />
-            </div>
-          </Link>
+          <div className="mb-3">
+            <Logo to="/" variant="full" size="md" />
+          </div>
           <h2 className="text-2xl font-extrabold text-[#14231b]">Join the Circular Movement</h2>
           <p className="text-xs text-[#5e7165] mt-1">Register as a Citizen, Collector, Recycler, or Admin</p>
         </div>

@@ -17,6 +17,7 @@ import {
   CheckSquare,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import Logo from './Logo';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { user } = useAuth();
@@ -112,8 +113,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           </nav>
         </div>
 
-        <div className="p-3.5 bg-[#f4f7f4] border border-[#dce6df] rounded-2xl text-center space-y-0.5">
-          <p className="text-xs font-bold text-[#1b4332]">PlasticLoop Circular Platform</p>
+        <div className="p-3.5 bg-[#f4f7f4] border border-[#dce6df] rounded-2xl flex flex-col items-center text-center gap-1.5">
+          <Logo variant="full" size="xs" to="/" />
           <p className="text-[10px] text-[#697b70]">Digitizing waste collection & recycling</p>
         </div>
       </aside>

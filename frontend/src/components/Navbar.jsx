@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RefreshCw, LogOut, User as UserIcon, Menu, Award, ChevronDown } from 'lucide-react';
+import { LogOut, User as UserIcon, Menu, Award, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
+import Logo from './Logo';
 
 const Navbar = ({ toggleSidebar }) => {
   const { user, logout } = useAuth();
@@ -31,19 +32,7 @@ const Navbar = ({ toggleSidebar }) => {
           </button>
         )}
 
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-[#1b4332] flex items-center justify-center shadow-md shadow-[#1b4332]/10 group-hover:scale-105 transition-transform">
-            <RefreshCw className="w-5 h-5 text-white animate-spin-slow" />
-          </div>
-          <div>
-            <span className="text-xl font-extrabold tracking-tight text-[#14231b]">
-              Plastic<span className="text-[#2d6a4f]">Loop</span>
-            </span>
-            <span className="block text-[9px] uppercase font-bold tracking-widest text-[#5c6e62] -mt-1">
-              Circular Economy
-            </span>
-          </div>
-        </Link>
+        <Logo to="/" variant="full" size="md" />
       </div>
 
       <div className="flex items-center gap-3">
