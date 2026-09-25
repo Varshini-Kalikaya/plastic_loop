@@ -24,12 +24,49 @@ app.set('trust proxy', 1);
 
 // Security and Body parsers
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-  })
-);
+// Configure CORS to support Vercel deployment, local dev, and dynamic credentials
+const allowedOrigins = [
+  'https://plasticloop-five.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (Postman, curl, server-to-server)
+    if (!origin) return callback(null, true);
+
+    const isAllowedExplicit = allowedOrigins.includes(origin);
+    const isVercel = /^https:\/\/.*\.vercel\.app$/.test(origin);
+    const isRender = /^https:\/\/.*\.onrender\.com$/.test(origin);
+    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+    if (isAllowedExplicit || isVercel || isRender || isLocalhost) {
+      return callback(null, true);
+    }
+    // Dynamic reflection fallback to avoid blocking valid frontend origins
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'Access-Control-Request-Method',
+    'Access-Control-Request-Headers',
+  ],
+  exposedHeaders: ['Authorization'],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 

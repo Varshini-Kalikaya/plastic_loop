@@ -5,8 +5,10 @@ const defaultUri = 'mongodb+srv://kalikayavarshini99_db_user:UDZYFbpBxPFvv9kD@cl
 const connectDB = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI || defaultUri;
-    const conn = await mongoose.connect(mongoUri);
-    console.log(`[MongoDB Connected]: ${conn.connection.host}`);
+    const conn = await mongoose.connect(mongoUri, {
+      dbName: 'plasticloop',
+    });
+    console.log(`[MongoDB Connected]: ${conn.connection.host} / Database: ${conn.connection.name}`);
   } catch (error) {
     console.error(`[MongoDB Connection Error]: ${error.message}`);
   }
