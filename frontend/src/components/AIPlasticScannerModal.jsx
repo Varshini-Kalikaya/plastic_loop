@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Bot, CheckCircle2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Sparkles, Bot, CheckCircle2, RefreshCw } from 'lucide-react';
 import Modal from './Modal';
 import ImageUploader from './ImageUploader';
 
@@ -13,7 +13,7 @@ const AIPlasticScannerModal = ({ isOpen, onClose, onSelectCategory }) => {
     setAnalyzing(true);
     setResult(null);
 
-    // Simulate FastAPI AI model prediction
+    // Simulate AI model prediction
     setTimeout(() => {
       const plasticOptions = [
         { code: 'PET', name: 'PET (Polyethylene Terephthalate)', confidence: 0.96, recyclable: true, points: 10, note: 'Clear beverage bottle detected. High commercial recycling value.' },
@@ -27,12 +27,12 @@ const AIPlasticScannerModal = ({ isOpen, onClose, onSelectCategory }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="🤖 AI Plastic Classifier (FastAPI Microservice Ready)">
+    <Modal isOpen={isOpen} onClose={onClose} title="AI Waste Classifier">
       <div className="space-y-4">
-        <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-start gap-3">
-          <Sparkles className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-slate-300 leading-relaxed">
-            Upload an image of plastic waste. Our computer vision architecture evaluates resin identification codes, opacity, and shape to suggest category and recyclability.
+        <div className="p-3.5 rounded-2xl bg-[#edf6f0] border border-[#cbe3d3] flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-[#1b4332] shrink-0 mt-0.5" />
+          <p className="text-xs text-[#2d4235] leading-relaxed">
+            Upload an image of plastic waste. Our computer vision model evaluates resin codes, shape, and transparency to suggest the appropriate category and recycling point rate.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ const AIPlasticScannerModal = ({ isOpen, onClose, onSelectCategory }) => {
           <button
             onClick={handleScan}
             disabled={analyzing}
-            className="w-full py-3 px-4 rounded-xl eco-button-gradient text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg"
+            className="w-full py-3 px-4 rounded-xl eco-btn-primary text-xs flex items-center justify-center gap-2 shadow-md"
           >
             {analyzing ? (
               <>
@@ -57,27 +57,27 @@ const AIPlasticScannerModal = ({ isOpen, onClose, onSelectCategory }) => {
         )}
 
         {result && (
-          <div className="p-4 rounded-2xl bg-slate-900 border border-emerald-500/40 space-y-3 animate-fade-in">
+          <div className="p-5 rounded-2xl bg-[#f7faf8] border border-[#cbe3d3] space-y-3 animate-fade-in">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400">Predicted Material</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">
+              <span className="text-xs font-bold text-[#5c6e62] uppercase tracking-wider">Predicted Material</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#edf6f0] text-[#1b4332] border border-[#cbe3d3] text-xs font-extrabold">
                 {(result.confidence * 100).toFixed(0)}% Confidence
               </span>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-extrabold text-sm">
+              <div className="w-11 h-11 rounded-xl bg-[#1b4332] text-white flex items-center justify-center font-extrabold text-sm shadow-sm">
                 {result.code}
               </div>
               <div>
-                <h4 className="font-bold text-sm text-white">{result.name}</h4>
-                <p className="text-xs text-slate-400">{result.note}</p>
+                <h4 className="font-bold text-sm text-[#14231b]">{result.name}</h4>
+                <p className="text-xs text-[#526458] mt-0.5">{result.note}</p>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Estimated Reward Rate:</span>
-              <span className="font-bold text-emerald-400">+{result.points} Points / KG</span>
+            <div className="pt-2 border-t border-[#e2e8df] flex items-center justify-between text-xs font-medium">
+              <span className="text-[#627367]">Estimated Reward Rate:</span>
+              <span className="font-extrabold text-[#1b4332]">+{result.points} Points / KG</span>
             </div>
 
             <button
@@ -85,7 +85,7 @@ const AIPlasticScannerModal = ({ isOpen, onClose, onSelectCategory }) => {
                 onSelectCategory(result.code);
                 onClose();
               }}
-              className="w-full mt-2 py-2.5 px-4 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-emerald-400 transition-colors"
+              className="w-full mt-2 py-3 px-4 rounded-xl eco-btn-primary text-xs flex items-center justify-center gap-1.5 shadow-md"
             >
               <CheckCircle2 className="w-4 h-4" /> Apply {result.code} Category to Request Form
             </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Calendar, MapPin, Eye, XCircle, Filter } from 'lucide-react';
+import { Package, Calendar, MapPin, Eye, XCircle, Filter, CheckCircle2, Clock, Truck, Factory, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
@@ -43,21 +43,60 @@ const MyPickupsPage = () => {
     }
   };
 
+  const getJourneyStage = (status) => {
+    switch (status) {
+      case 'PENDING':
+        return 1;
+      case 'ASSIGNED':
+      case 'ACCEPTED':
+        return 2;
+      case 'PICKED_UP':
+        return 3;
+      case 'VERIFIED':
+        return 4;
+      case 'SENT_TO_RECYCLER':
+      case 'PROCESSING':
+        return 5;
+      case 'RECYCLED':
+      case 'COMPLETED':
+        return 6;
+      default:
+        return 0; // Cancelled
+    }
+  };
+
+  const journeySteps = [
+    { num: 1, label: 'Request submitted' },
+    { num: 2, label: 'Collector assigned' },
+    { num: 3, label: 'Material picked up' },
+    { num: 4, label: 'Scale weight verified' },
+    { num: 5, label: 'Sent for recycling' },
+    { num: 6, label: 'Recycled & points awarded' },
+  ];
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+      {/* Page Header & Filter Tabs */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 sm:p-8 rounded-3xl border border-[#e2e8df] shadow-sm">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">My Pickup Requests</h1>
-          <p className="text-xs text-slate-400 mt-1">Track status and details of your waste collection requests</p>
+          <span className="text-xs font-extrabold text-[#1b4332] uppercase tracking-widest bg-[#edf6f0] px-3 py-1 rounded-full border border-[#cadbc5]">
+            Collection Tracking
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#14231b] mt-2 tracking-tight">
+            My Pickup Requests
+          </h1>
+          <p className="text-xs sm:text-sm text-[#5c6e62] mt-0.5">
+            Track real-time collection stages, weight verifications, and processing status.
+          </p>
         </div>
 
         {/* Status Filter */}
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-400" />
+        <div className="flex items-center gap-2 bg-[#f8faf8] p-1.5 rounded-2xl border border-[#dce6df]">
+          <Filter className="w-4 h-4 text-[#687a6e] ml-2" />
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:border-emerald-500"
+            className="bg-transparent text-xs font-bold text-[#14231b] pr-3 py-1.5 focus:outline-none cursor-pointer"
           >
             <option value="">All Statuses</option>
             <option value="PENDING">PENDING</option>
@@ -74,97 +113,175 @@ const MyPickupsPage = () => {
       {loading ? (
         <LoadingSpinner message="Fetching your pickup requests..." />
       ) : pickups.length === 0 ? (
-        <EmptyState title="No pickup requests found" description="You have not submitted any pickup requests matching this filter." />
+        <EmptyState
+          title="No pickup requests found"
+          description="You haven't submitted any pickup requests matching this filter."
+        />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {pickups.map((p) => (
-            <div key={p._id} className="glass-card glass-card-hover p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-xs text-emerald-400">#{p._id.slice(-6).toUpperCase()}</span>
-                  <StatusBadge status={p.status} />
-                </div>
-
-                <div>
-                  <h4 className="font-bold text-sm text-white">{p.plasticTypeId?.name}</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Est. Weight: <strong className="text-emerald-300">{p.estimatedWeight} KG</strong>
-                    {p.actualWeight > 0 && <span className="ml-2 text-teal-400 font-bold">(Verified: {p.actualWeight} KG)</span>}
-                  </p>
-                </div>
-
-                <div className="space-y-1 text-xs text-slate-400 border-t border-slate-800/80 pt-3">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{new Date(p.preferredDate).toLocaleDateString()} • {p.preferredTimeSlot}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {pickups.map((p) => {
+            const currentStage = getJourneyStage(p.status);
+            return (
+              <div
+                key={p._id}
+                className="bg-white rounded-3xl border border-[#e2e8df] p-6 sm:p-7 shadow-sm hover:border-[#b8cfbf] transition-all flex flex-col justify-between space-y-6"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-[#edf2ec] pb-3.5">
+                    <span className="font-mono font-extrabold text-xs text-[#1b4332] bg-[#edf6f0] px-2.5 py-1 rounded-lg border border-[#cbe3d3]">
+                      #{p._id.slice(-6).toUpperCase()}
+                    </span>
+                    <StatusBadge status={p.status} />
                   </div>
-                  <div className="flex items-center gap-1.5 truncate">
-                    <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                    <span className="truncate">{p.address?.street}, {p.address?.city}</span>
+
+                  <div>
+                    <h3 className="font-extrabold text-base text-[#14231b]">{p.plasticTypeId?.name}</h3>
+                    <p className="text-xs text-[#526458] mt-1 font-medium">
+                      Estimated: <strong className="text-[#14231b] font-bold">{p.estimatedWeight} KG</strong>
+                      {p.actualWeight > 0 && (
+                        <span className="ml-2 text-[#1b4332] font-black">
+                          • Scale Verified: {p.actualWeight} KG
+                        </span>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Visual Recycling Journey Timeline */}
+                  {p.status !== 'CANCELLED' ? (
+                    <div className="p-4 rounded-2xl bg-[#fafbfa] border border-[#e5ebe5] space-y-2.5">
+                      <span className="text-[10px] font-extrabold text-[#526458] uppercase tracking-wider block">
+                        Your Recycling Journey
+                      </span>
+                      <div className="space-y-2">
+                        {journeySteps.map((step) => {
+                          const isDone = currentStage >= step.num;
+                          const isCurrent = currentStage === step.num;
+                          return (
+                            <div key={step.num} className="flex items-center gap-2.5 text-xs">
+                              <span
+                                className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                                  isDone
+                                    ? 'bg-[#1b4332] text-white'
+                                    : 'bg-[#e2e8df] text-[#8fa295]'
+                                }`}
+                              >
+                                {isDone ? '✓' : step.num}
+                              </span>
+                              <span
+                                className={`${
+                                  isCurrent
+                                    ? 'text-[#14231b] font-bold'
+                                    : isDone
+                                    ? 'text-[#2d6a4f] font-medium'
+                                    : 'text-[#8fa295]'
+                                }`}
+                              >
+                                {step.label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 font-semibold">
+                      This pickup request was cancelled.
+                    </div>
+                  )}
+
+                  <div className="space-y-1.5 text-xs text-[#627367] pt-1">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-[#8aa092]" />
+                      <span>{new Date(p.preferredDate).toLocaleDateString()} • {p.preferredTimeSlot}</span>
+                    </div>
+                    <div className="flex items-center gap-2 truncate">
+                      <MapPin className="w-3.5 h-3.5 text-[#8aa092] shrink-0" />
+                      <span className="truncate">{p.address?.street}, {p.address?.city}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2 pt-2 border-t border-slate-800/80">
-                <button
-                  onClick={() => setSelectedPickup(p)}
-                  className="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Eye className="w-3.5 h-3.5" /> Details
-                </button>
-                {['PENDING', 'ASSIGNED'].includes(p.status) && (
+                <div className="flex items-center gap-3 pt-3 border-t border-[#edf2ec]">
                   <button
-                    onClick={() => handleCancel(p._id)}
-                    className="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-xs font-bold text-rose-400 flex items-center justify-center gap-1 transition-colors"
+                    onClick={() => setSelectedPickup(p)}
+                    className="flex-1 py-2.5 px-4 rounded-xl eco-btn-secondary text-xs font-bold flex items-center justify-center gap-2"
                   >
-                    <XCircle className="w-3.5 h-3.5" /> Cancel
+                    <Eye className="w-3.5 h-3.5 text-[#2d6a4f]" /> View Complete Details
                   </button>
-                )}
+                  {['PENDING', 'ASSIGNED'].includes(p.status) && (
+                    <button
+                      onClick={() => handleCancel(p._id)}
+                      className="py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                    >
+                      <XCircle className="w-3.5 h-3.5 text-rose-600" /> Cancel
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Pickup Detail Modal */}
       {selectedPickup && (
-        <Modal isOpen={!!selectedPickup} onClose={() => setSelectedPickup(null)} title={`Pickup Request #${selectedPickup._id.slice(-6).toUpperCase()}`}>
+        <Modal
+          isOpen={!!selectedPickup}
+          onClose={() => setSelectedPickup(null)}
+          title={`Pickup Request #${selectedPickup._id.slice(-6).toUpperCase()}`}
+        >
           <div className="space-y-4 text-xs">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
-              <span className="text-slate-400 font-semibold">Status</span>
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#fafbfa] border border-[#e2e8df]">
+              <span className="text-[#627367] font-semibold">Current State</span>
               <StatusBadge status={selectedPickup.status} />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <p className="text-slate-400 font-semibold">Plastic Category</p>
-                <p className="font-bold text-white mt-1">{selectedPickup.plasticTypeId?.name} ({selectedPickup.plasticTypeId?.code})</p>
+              <div className="p-3.5 rounded-2xl bg-[#fafbfa] border border-[#e2e8df]">
+                <span className="text-[#627367] font-bold block">Plastic Category</span>
+                <p className="font-extrabold text-[#14231b] mt-1">
+                  {selectedPickup.plasticTypeId?.name} ({selectedPickup.plasticTypeId?.code})
+                </p>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <p className="text-slate-400 font-semibold">Reward Rate</p>
-                <p className="font-bold text-emerald-400 mt-1">+{selectedPickup.plasticTypeId?.pointsPerKg} points/kg</p>
+              <div className="p-3.5 rounded-2xl bg-[#fafbfa] border border-[#e2e8df]">
+                <span className="text-[#627367] font-bold block">Reward Point Rate</span>
+                <p className="font-extrabold text-[#1b4332] mt-1">
+                  +{selectedPickup.plasticTypeId?.pointsPerKg} points/kg
+                </p>
               </div>
             </div>
 
             {selectedPickup.images?.length > 0 && (
               <div>
-                <p className="text-slate-400 font-semibold mb-1">Attached Waste Image</p>
-                <img src={selectedPickup.images[0]} alt="Waste" className="w-full h-40 object-cover rounded-xl border border-slate-800" />
+                <span className="text-[#627367] font-bold block mb-1.5">Attached Waste Photo</span>
+                <img
+                  src={selectedPickup.images[0]}
+                  alt="Waste Photo"
+                  className="w-full h-44 object-cover rounded-2xl border border-[#d6e2d9]"
+                />
               </div>
             )}
 
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-              <p className="text-slate-400 font-semibold">Pickup Address</p>
-              <p className="text-white font-medium">{selectedPickup.address?.street}, {selectedPickup.address?.city}, {selectedPickup.address?.state} - {selectedPickup.address?.zipCode}</p>
+            <div className="p-3.5 rounded-2xl bg-[#fafbfa] border border-[#e2e8df] space-y-1">
+              <span className="text-[#627367] font-bold block">Doorstep Address</span>
+              <p className="text-[#14231b] font-medium leading-relaxed">
+                {selectedPickup.address?.street}, {selectedPickup.address?.city}, {selectedPickup.address?.state} - {selectedPickup.address?.zipCode}
+              </p>
             </div>
 
             {selectedPickup.collectorId && (
-              <div className="p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 flex items-center gap-3">
-                <img src={selectedPickup.collectorId.profileImage} alt="Collector" className="w-10 h-10 rounded-full object-cover border border-blue-400" />
+              <div className="p-4 rounded-2xl bg-[#f0f9ff] border border-[#bae6fd] flex items-center gap-3.5">
+                <img
+                  src={selectedPickup.collectorId.profileImage}
+                  alt="Collector"
+                  className="w-11 h-11 rounded-xl object-cover border border-[#7dd3fc]"
+                />
                 <div>
-                  <p className="text-blue-300 font-bold">Assigned Collector</p>
-                  <p className="text-white font-semibold">{selectedPickup.collectorId.name}</p>
-                  <p className="text-slate-400">{selectedPickup.collectorId.phone}</p>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0369a1] block">
+                    Assigned Logistics Collector
+                  </span>
+                  <p className="text-sm font-extrabold text-[#0c4a6e]">{selectedPickup.collectorId.name}</p>
+                  <p className="text-xs text-[#0284c7] font-medium">{selectedPickup.collectorId.phone}</p>
                 </div>
               </div>
             )}

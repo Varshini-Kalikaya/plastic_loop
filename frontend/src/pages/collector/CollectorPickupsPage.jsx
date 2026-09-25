@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Truck, Check, Weight, Send, MapPin, Phone, Eye } from 'lucide-react';
+import { Truck, Check, Weight, Send, MapPin, Phone, Eye, Scale, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
@@ -88,102 +88,148 @@ const CollectorPickupsPage = () => {
   if (loading) return <LoadingSpinner message="Loading assigned pickups..." />;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-extrabold text-white">Assigned Waste Pickups</h1>
-        <p className="text-xs text-slate-400 mt-1">Accept requests, perform scale weight verification and dispatch waste to recycling plants.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pickups.map((p) => (
-          <div key={p._id} className="glass-card p-6 rounded-3xl border border-slate-800 flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="font-mono font-bold text-xs text-blue-400">#{p._id.slice(-6).toUpperCase()}</span>
-                <StatusBadge status={p.status} />
-              </div>
-
-              <div>
-                <h4 className="font-bold text-base text-white">{p.plasticTypeId?.name}</h4>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Est. Weight: <strong className="text-emerald-400">{p.estimatedWeight} KG</strong>
-                  {p.actualWeight > 0 && <span className="ml-2 font-bold text-teal-300">(Verified: {p.actualWeight} KG)</span>}
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80 space-y-1 text-xs">
-                <p className="font-bold text-white">{p.userId?.name}</p>
-                <p className="text-slate-400 flex items-center gap-1">
-                  <Phone className="w-3 h-3 text-slate-500" /> {p.userId?.phone}
-                </p>
-                <p className="text-slate-400 flex items-center gap-1 truncate">
-                  <MapPin className="w-3 h-3 text-slate-500 shrink-0" /> {p.address?.street}, {p.address?.city}
-                </p>
-              </div>
-            </div>
-
-            {/* Collector Workflow Action Buttons */}
-            <div className="pt-2 border-t border-slate-800 space-y-2">
-              {p.status === 'ASSIGNED' && (
-                <button
-                  onClick={() => handleAccept(p._id)}
-                  className="w-full py-2.5 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Check className="w-4 h-4" /> Accept Assignment
-                </button>
-              )}
-
-              {p.status === 'ACCEPTED' && (
-                <button
-                  onClick={() => handleMarkPickedUp(p._id)}
-                  className="w-full py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Truck className="w-4 h-4" /> Mark Material Picked Up
-                </button>
-              )}
-
-              {p.status === 'PICKED_UP' && (
-                <button
-                  onClick={() => {
-                    setVerifyModalPickup(p);
-                    setActualWeight(p.estimatedWeight);
-                    setProofImage('');
-                  }}
-                  className="w-full py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Weight className="w-4 h-4" /> Verify Actual Scale Weight
-                </button>
-              )}
-
-              {p.status === 'VERIFIED' && (
-                <button
-                  onClick={() => handleSendToRecycler(p._id)}
-                  className="w-full py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Send className="w-4 h-4" /> Dispatch Shipment to Recycler
-                </button>
-              )}
-            </div>
+    <div className="space-y-6 animate-fade-in pb-12">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e8f0ea] text-[#1b4332] text-xs font-semibold uppercase tracking-wider mb-2">
+            <Truck className="w-3.5 h-3.5" />
+            <span>Active Assignments</span>
           </div>
-        ))}
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#14231b] tracking-tight">Assigned Waste Pickups</h1>
+          <p className="text-sm text-[#526458] mt-1">Accept requests, perform scale weight verification, and dispatch materials to certified recyclers.</p>
+        </div>
+        <div className="text-xs font-semibold text-[#526458] bg-white px-4 py-2 rounded-xl border border-[#e2e8df] self-start sm:self-auto shadow-sm">
+          Total In-Queue: <span className="font-bold text-[#1b4332]">{pickups.length}</span>
+        </div>
       </div>
+
+      {pickups.length === 0 ? (
+        <div className="bg-white p-12 rounded-3xl border border-[#e2e8df] text-center shadow-sm max-w-lg mx-auto">
+          <div className="w-16 h-16 rounded-full bg-[#e8f0ea] flex items-center justify-center mx-auto mb-4 text-[#1b4332]">
+            <Truck className="w-8 h-8" />
+          </div>
+          <h3 className="text-lg font-bold text-[#14231b]">No Pickups Assigned</h3>
+          <p className="text-xs text-[#526458] mt-1">
+            There are currently no active or pending pickup requests assigned to your vehicle. Check back shortly.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pickups.map((p) => (
+            <div
+              key={p._id}
+              className="bg-white p-6 rounded-3xl border border-[#e2e8df] shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow space-y-5"
+            >
+              <div className="space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-xs text-[#1b4332] bg-[#e8f0ea] px-2.5 py-1 rounded-md">
+                    #{p._id.slice(-6).toUpperCase()}
+                  </span>
+                  <StatusBadge status={p.status} />
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-base text-[#14231b]">{p.plasticTypeId?.name || 'Recyclable Plastic'}</h4>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-[#526458]">
+                    <span>Est: <strong className="text-[#14231b] font-bold">{p.estimatedWeight} KG</strong></span>
+                    {p.actualWeight > 0 && (
+                      <span className="font-bold text-[#1b4332] bg-[#e8f0ea] px-2 py-0.5 rounded-full">
+                        Scale Verified: {p.actualWeight} KG
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Citizen Details Pill Box */}
+                <div className="p-3.5 rounded-2xl bg-[#fbfbf9] border border-[#edf2ec] space-y-1.5 text-xs">
+                  <p className="font-bold text-[#14231b]">{p.userId?.name || 'Anonymous Citizen'}</p>
+                  {p.userId?.phone && (
+                    <p className="text-[#526458] flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-[#8fa895]" />
+                      <span>{p.userId.phone}</span>
+                    </p>
+                  )}
+                  <p className="text-[#526458] flex items-start gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#8fa895] shrink-0 mt-0.5" />
+                    <span className="truncate">{p.address?.street}, {p.address?.city}</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Collector Action Buttons */}
+              <div className="pt-3 border-t border-[#edf2ec] space-y-2">
+                {p.status === 'ASSIGNED' && (
+                  <button
+                    onClick={() => handleAccept(p._id)}
+                    className="w-full py-2.5 rounded-xl bg-[#1b4332] hover:bg-[#2d6a4f] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>Accept Assignment</span>
+                  </button>
+                )}
+
+                {p.status === 'ACCEPTED' && (
+                  <button
+                    onClick={() => handleMarkPickedUp(p._id)}
+                    className="w-full py-2.5 rounded-xl bg-[#2d6a4f] hover:bg-[#1b4332] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
+                  >
+                    <Truck className="w-4 h-4" />
+                    <span>Mark Material Picked Up</span>
+                  </button>
+                )}
+
+                {p.status === 'PICKED_UP' && (
+                  <button
+                    onClick={() => {
+                      setVerifyModalPickup(p);
+                      setActualWeight(p.estimatedWeight);
+                      setProofImage('');
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-[#1b4332] hover:bg-[#2d6a4f] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
+                  >
+                    <Weight className="w-4 h-4" />
+                    <span>Verify Actual Scale Weight</span>
+                  </button>
+                )}
+
+                {p.status === 'VERIFIED' && (
+                  <button
+                    onClick={() => handleSendToRecycler(p._id)}
+                    className="w-full py-2.5 rounded-xl bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Dispatch to Recycler</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Weight Verification Modal */}
       {verifyModalPickup && (
         <Modal
           isOpen={!!verifyModalPickup}
           onClose={() => setVerifyModalPickup(null)}
-          title={`Weight Verification - Pickup #${verifyModalPickup._id.slice(-6).toUpperCase()}`}
+          title={`Weight Scale Verification — #${verifyModalPickup._id.slice(-6).toUpperCase()}`}
         >
           <form onSubmit={handleVerifyWeightSubmit} className="space-y-4">
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs">
-              <p className="text-slate-400">Plastic Type: <strong className="text-white">{verifyModalPickup.plasticTypeId?.name}</strong></p>
-              <p className="text-slate-400 mt-1">Citizen: <strong className="text-white">{verifyModalPickup.userId?.name}</strong></p>
-              <p className="text-slate-400 mt-1">Estimated Weight: <strong className="text-emerald-400">{verifyModalPickup.estimatedWeight} KG</strong></p>
+            <div className="p-4 rounded-2xl bg-[#fbfbf9] border border-[#edf2ec] text-xs space-y-1.5">
+              <p className="text-[#526458]">
+                Plastic Type: <strong className="text-[#14231b]">{verifyModalPickup.plasticTypeId?.name}</strong>
+              </p>
+              <p className="text-[#526458]">
+                Citizen: <strong className="text-[#14231b]">{verifyModalPickup.userId?.name}</strong>
+              </p>
+              <p className="text-[#526458]">
+                Estimated Weight: <strong className="text-[#1b4332] font-bold">{verifyModalPickup.estimatedWeight} KG</strong>
+              </p>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-200 mb-1">Enter Verified Scale Weight (KG)</label>
+              <label className="block text-xs font-bold text-[#14231b] mb-1.5">Enter Verified Scale Weight (KG)</label>
               <input
                 type="number"
                 step="0.1"
@@ -191,21 +237,25 @@ const CollectorPickupsPage = () => {
                 required
                 value={actualWeight}
                 onChange={(e) => setActualWeight(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white font-bold"
+                placeholder="e.g. 5.4"
+                className="w-full bg-[#fbfbf9] border border-[#d8e2dc] rounded-xl px-4 py-2.5 text-sm font-bold text-[#14231b] focus:outline-none focus:ring-2 focus:ring-[#1b4332]/20 focus:border-[#1b4332] transition"
               />
             </div>
 
-            <ImageUploader
-              label="Upload Scale Verification Proof Photo"
-              onUploadSuccess={(url) => setProofImage(url)}
-            />
+            <div>
+              <ImageUploader
+                label="Scale Photo / Weight Slip Proof"
+                onUploadSuccess={(url) => setProofImage(url)}
+              />
+            </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-extrabold text-xs shadow-lg"
+              className="w-full py-3.5 rounded-xl bg-[#1b4332] hover:bg-[#2d6a4f] text-white font-bold text-sm shadow-sm transition disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
             >
-              {submitting ? 'Recording Verification...' : 'Confirm Verified Weight'}
+              <Scale className="w-4 h-4" />
+              <span>{submitting ? 'Recording Verification...' : 'Confirm Verified Weight'}</span>
             </button>
           </form>
         </Modal>

@@ -11,15 +11,17 @@ import {
   TreePine,
   Sparkles,
   ChevronRight,
-  Bot,
-  UserCheck,
+  CheckCircle2,
+  Users,
+  Layers,
+  ArrowDown,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const LandingPage = () => {
   const { user, demoLogin } = useAuth();
   const navigate = useNavigate();
-  const [calcKg, setCalcKg] = useState(10);
+  const [calcKg, setCalcKg] = useState(15);
 
   const handleDemoAccess = async (role) => {
     await demoLogin(role);
@@ -29,218 +31,282 @@ const LandingPage = () => {
     else navigate('/dashboard');
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
-      {/* Hero Section */}
-      <section className="relative pt-16 pb-24 px-4 sm:px-8 max-w-7xl mx-auto text-center overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-6">
-          <Sparkles className="w-4 h-4" /> Smart Plastic Circular Economy Platform
+  return (
+    <div className="min-h-screen bg-[#fbfbf9] text-[#1c241f] flex flex-col selection:bg-[#1b4332] selection:text-white">
+      {/* Hero Section */}
+      <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-8 max-w-7xl mx-auto text-center overflow-hidden">
+        {/* Soft Organic Background Accents */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] h-[34rem] bg-[#edf6f0]/80 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <div className="absolute top-1/3 right-10 w-72 h-72 bg-[#f4f7eb]/70 rounded-full blur-2xl pointer-events-none -z-10"></div>
+
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#edf6f0] border border-[#cbe3d3] text-[#1b4332] text-xs font-bold mb-6 shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-[#2d6a4f]" />
+          <span>Circular Economy Platform for Plastic Waste</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight">
-          Turn Plastic Waste Into <span className="eco-gradient-text">Verified Rewards</span> & Environmental Impact
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.1] text-[#14231b]">
+          Give Plastic a <span className="text-[#2d6a4f] underline decoration-[#a3d2af] decoration-wavy decoration-2">Second Life.</span>
         </h1>
 
-        <p className="mt-6 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          PlasticLoop connects citizens, waste collectors, recycling centers, and administrators into an integrated ecosystem. Request pickups, verify weight, track recycling, and earn points seamlessly.
+        <p className="mt-6 text-base sm:text-xl text-[#526458] max-w-2xl mx-auto leading-relaxed font-normal">
+          Connect your plastic waste with responsible collection and recycling — and see the transparent environmental impact you create every step of the way.
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
           <Link
             to={user ? '/dashboard' : '/register'}
-            className="px-8 py-4 rounded-xl eco-button-gradient text-slate-950 font-extrabold text-sm flex items-center gap-2 shadow-xl shadow-emerald-500/20 hover:scale-105 transition-all"
+            className="px-8 py-4 rounded-2xl eco-btn-primary font-bold text-sm flex items-center gap-2.5 shadow-md hover:scale-[1.02] transition-transform"
           >
-            {user ? 'Go to My Dashboard' : 'Request Pickup Now'} <ArrowRight className="w-4 h-4" />
+            <span>{user ? 'Go to My Dashboard' : 'Start Recycling'}</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
-          <a
-            href="#demo-access"
-            className="px-6 py-4 rounded-xl glass-card text-white font-bold text-sm hover:border-emerald-500/40 transition-all"
+          <button
+            onClick={() => scrollToSection('how-it-works')}
+            className="px-7 py-4 rounded-2xl eco-btn-secondary text-sm font-bold flex items-center gap-2 transition-all"
           >
-            ⚡ Test Demo Accounts
-          </a>
+            <span>Explore How It Works</span>
+            <ArrowDown className="w-4 h-4 text-[#2d6a4f]" />
+          </button>
         </div>
 
-        {/* Live Ecosystem Impact Bar */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto text-left">
-          <div className="glass-card p-5 rounded-2xl border-emerald-500/20">
-            <p className="text-xs text-slate-400 uppercase font-semibold">Total Recycled</p>
-            <h3 className="text-2xl font-bold text-emerald-400 mt-1">1,250+ KG</h3>
-            <p className="text-[11px] text-slate-400 mt-1">Verified plastic weight</p>
-          </div>
-          <div className="glass-card p-5 rounded-2xl border-emerald-500/20">
-            <p className="text-xs text-slate-400 uppercase font-semibold">CO2 Avoided</p>
-            <h3 className="text-2xl font-bold text-teal-400 mt-1">1,875 KG</h3>
-            <p className="text-[11px] text-slate-400 mt-1">Calculated EPA metrics</p>
-          </div>
-          <div className="glass-card p-5 rounded-2xl border-emerald-500/20">
-            <p className="text-xs text-slate-400 uppercase font-semibold">Reward Points</p>
-            <h3 className="text-2xl font-bold text-amber-400 mt-1">15,000+</h3>
-            <p className="text-[11px] text-slate-400 mt-1">Credited to citizens</p>
-          </div>
-          <div className="glass-card p-5 rounded-2xl border-emerald-500/20">
-            <p className="text-xs text-slate-400 uppercase font-semibold">Active Partners</p>
-            <h3 className="text-2xl font-bold text-purple-400 mt-1">100%</h3>
-            <p className="text-[11px] text-slate-400 mt-1">Collectors & Recyclers</p>
+        {/* Live Ecosystem Impact Horizontal Strip */}
+        <div className="mt-16 sm:mt-20 max-w-5xl mx-auto bg-white rounded-3xl border border-[#e2e8df] p-6 sm:p-8 shadow-sm">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-left divide-y sm:divide-y-0 sm:divide-x divide-[#edf2ec]">
+            <div className="pt-4 sm:pt-0 sm:px-4">
+              <span className="text-[11px] font-bold text-[#6a7d71] uppercase tracking-wider block">Total Recycled</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#1b4332] mt-1">1,250+ KG</h3>
+              <p className="text-xs text-[#7d8f83] mt-0.5 font-medium">Verified plastic waste weight</p>
+            </div>
+            <div className="pt-4 sm:pt-0 sm:px-4">
+              <span className="text-[11px] font-bold text-[#6a7d71] uppercase tracking-wider block">CO2 Avoided</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#2d6a4f] mt-1">1,875 KG</h3>
+              <p className="text-xs text-[#7d8f83] mt-0.5 font-medium">Calculated EPA WARM metrics</p>
+            </div>
+            <div className="pt-4 sm:pt-0 sm:px-4">
+              <span className="text-[11px] font-bold text-[#6a7d71] uppercase tracking-wider block">Reward Points</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#92400e] mt-1">15,000+</h3>
+              <p className="text-xs text-[#7d8f83] mt-0.5 font-medium">Credited to recycling citizens</p>
+            </div>
+            <div className="pt-4 sm:pt-0 sm:px-4">
+              <span className="text-[11px] font-bold text-[#6a7d71] uppercase tracking-wider block">Active Partners</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#14231b] mt-1">100%</h3>
+              <p className="text-xs text-[#7d8f83] mt-0.5 font-medium">Certified collectors & plants</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Demo One-Click Access Cards */}
-      <section id="demo-access" className="py-16 px-4 bg-slate-900/60 border-y border-slate-800/80">
+      {/* Visual Journey: How It Works Section */}
+      <section id="how-it-works" className="py-20 px-4 sm:px-8 bg-[#f4f7f4] border-y border-[#e2e8df]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">Instant One-Click Demo Logins</h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-2">
-              Evaluate all 4 stakeholder roles immediately without registration.
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-xs font-extrabold text-[#1b4332] uppercase tracking-widest bg-[#e2ede5] px-3 py-1 rounded-full border border-[#cadbc5]">
+              Transparent Process
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#14231b] mt-3 tracking-tight">
+              A 5-Stage Circular Recycling Journey
+            </h2>
+            <p className="text-sm text-[#54665a] mt-2 leading-relaxed">
+              Every kilogram of plastic is tracked from your doorstep to secondary raw material pelletization.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="glass-card glass-card-hover p-6 rounded-2xl border border-emerald-500/30 flex flex-col justify-between">
+          {/* Interactive Step Strip */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+            <div className="bg-white p-6 rounded-2xl border border-[#e2e8df] shadow-sm flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-4">
-                  👤
-                </div>
-                <h3 className="font-bold text-base text-white">Citizen / User</h3>
-                <p className="text-xs text-slate-400 mt-2">
-                  Request waste pickup, track recycling progress, view impact & redeem reward vouchers.
+                <span className="text-xs font-mono font-extrabold text-[#1b4332] bg-[#edf6f0] px-2.5 py-1 rounded-md">
+                  01
+                </span>
+                <h4 className="font-extrabold text-sm text-[#14231b] mt-4 uppercase tracking-wider">Submit Request</h4>
+                <p className="text-xs text-[#5f7166] mt-2 leading-relaxed">
+                  Select plastic resin type (PET, HDPE, PP), approximate weight, and your preferred collection time.
                 </p>
               </div>
-              <button
-                onClick={() => handleDemoAccess('USER')}
-                className="mt-6 py-2.5 w-full rounded-xl bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-slate-950 font-bold text-xs transition-colors"
-              >
-                Login as User →
-              </button>
+              <div className="mt-4 pt-3 border-t border-[#edf2ec] text-[11px] font-bold text-[#2d6a4f] flex items-center gap-1">
+                <span>Citizen Portal</span> →
+              </div>
             </div>
 
-            <div className="glass-card glass-card-hover p-6 rounded-2xl border border-blue-500/30 flex flex-col justify-between">
+            <div className="bg-white p-6 rounded-2xl border border-[#e2e8df] shadow-sm flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold mb-4">
-                  🚚
-                </div>
-                <h3 className="font-bold text-base text-white">Collector</h3>
-                <p className="text-xs text-slate-400 mt-2">
-                  View assigned pickups, accept requests, verify actual weight, and dispatch to recyclers.
+                <span className="text-xs font-mono font-extrabold text-[#0369a1] bg-[#f0f9ff] px-2.5 py-1 rounded-md">
+                  02
+                </span>
+                <h4 className="font-extrabold text-sm text-[#14231b] mt-4 uppercase tracking-wider">Collect & Route</h4>
+                <p className="text-xs text-[#5f7166] mt-2 leading-relaxed">
+                  An authorized waste collector receives the route dispatch, arrives on schedule, and collects the material.
                 </p>
               </div>
-              <button
-                onClick={() => handleDemoAccess('COLLECTOR')}
-                className="mt-6 py-2.5 w-full rounded-xl bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-slate-950 font-bold text-xs transition-colors"
-              >
-                Login as Collector →
-              </button>
+              <div className="mt-4 pt-3 border-t border-[#edf2ec] text-[11px] font-bold text-[#0369a1] flex items-center gap-1">
+                <span>Verified Logistics</span> →
+              </div>
             </div>
 
-            <div className="glass-card glass-card-hover p-6 rounded-2xl border border-purple-500/30 flex flex-col justify-between">
+            <div className="bg-white p-6 rounded-2xl border border-[#e2e8df] shadow-sm flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold mb-4">
-                  🏭
-                </div>
-                <h3 className="font-bold text-base text-white">Recycling Facility</h3>
-                <p className="text-xs text-slate-400 mt-2">
-                  Receive material shipments, record recycled & rejected weight, and credit points.
+                <span className="text-xs font-mono font-extrabold text-[#0f766e] bg-[#f0fdfa] px-2.5 py-1 rounded-md">
+                  03
+                </span>
+                <h4 className="font-extrabold text-sm text-[#14231b] mt-4 uppercase tracking-wider">Scale Verification</h4>
+                <p className="text-xs text-[#5f7166] mt-2 leading-relaxed">
+                  Physical weight is verified with portable digital scales and photographic audit proof is logged.
                 </p>
               </div>
-              <button
-                onClick={() => handleDemoAccess('RECYCLER')}
-                className="mt-6 py-2.5 w-full rounded-xl bg-purple-500/20 hover:bg-purple-500 text-purple-400 hover:text-slate-950 font-bold text-xs transition-colors"
-              >
-                Login as Recycler →
-              </button>
+              <div className="mt-4 pt-3 border-t border-[#edf2ec] text-[11px] font-bold text-[#0f766e] flex items-center gap-1">
+                <span>Weight Audit</span> →
+              </div>
             </div>
 
-            <div className="glass-card glass-card-hover p-6 rounded-2xl border border-amber-500/30 flex flex-col justify-between">
+            <div className="bg-white p-6 rounded-2xl border border-[#e2e8df] shadow-sm flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-4">
-                  🛡️
-                </div>
-                <h3 className="font-bold text-base text-white">Platform Admin</h3>
-                <p className="text-xs text-slate-400 mt-2">
-                  Assign collectors, manage users & rewards, inspect platform analytics & audit logs.
+                <span className="text-xs font-mono font-extrabold text-[#6b21a8] bg-[#faf5ff] px-2.5 py-1 rounded-md">
+                  04
+                </span>
+                <h4 className="font-extrabold text-sm text-[#14231b] mt-4 uppercase tracking-wider">Process & Recycle</h4>
+                <p className="text-xs text-[#5f7166] mt-2 leading-relaxed">
+                  Certified recycling plants sort, shred, clean, and mechanically reprocess plastic into high-grade pellets.
                 </p>
               </div>
-              <button
-                onClick={() => handleDemoAccess('ADMIN')}
-                className="mt-6 py-2.5 w-full rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-400 hover:text-slate-950 font-bold text-xs transition-colors"
-              >
-                Login as Admin →
-              </button>
+              <div className="mt-4 pt-3 border-t border-[#edf2ec] text-[11px] font-bold text-[#6b21a8] flex items-center gap-1">
+                <span>Pellet Processing</span> →
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-[#e2e8df] shadow-sm flex flex-col justify-between">
+              <div>
+                <span className="text-xs font-mono font-extrabold text-[#92400e] bg-[#fefce8] px-2.5 py-1 rounded-md">
+                  05
+                </span>
+                <h4 className="font-extrabold text-sm text-[#14231b] mt-4 uppercase tracking-wider">Points & Impact</h4>
+                <p className="text-xs text-[#5f7166] mt-2 leading-relaxed">
+                  Reward points are deposited directly into your wallet and verified carbon offset metrics update immediately.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[#edf2ec] text-[11px] font-bold text-[#92400e] flex items-center gap-1">
+                <span>Points + CO2 Credit</span> ✓
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* End-to-End Core Business Workflow */}
-      <section className="py-20 px-4 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl font-extrabold text-white">End-to-End Lifecycle Workflow</h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-2">
-            Every step is tracked in real-time with strict backend validation.
+      {/* Stakeholder 1-Click Demo Logins */}
+      <section className="py-20 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-xs font-extrabold text-[#1b4332] uppercase tracking-widest bg-[#edf6f0] px-3 py-1 rounded-full border border-[#cadbc5]">
+            Experience All Stakeholders
+          </span>
+          <h2 className="text-3xl font-extrabold text-[#14231b] mt-3 tracking-tight">Instant Demo Experience</h2>
+          <p className="text-sm text-[#54665a] mt-2">
+            Switch between all 4 platform roles instantly to evaluate the end-to-end circular workflow.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
-          <div className="glass-card p-5 rounded-2xl text-center border-slate-800">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold mb-3">
-              1
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-3xl border border-[#e2e8df] shadow-sm hover:border-[#b8cfbf] transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-[#edf6f0] text-[#1b4332] flex items-center justify-center font-bold text-lg mb-4 border border-[#cbe3d3]">
+                👤
+              </div>
+              <h3 className="font-bold text-base text-[#14231b]">Citizen / User</h3>
+              <p className="text-xs text-[#586a5f] mt-2 leading-relaxed">
+                Request doorstep collection, track recycling stages, view verified environmental metrics, and redeem reward gift cards.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-white">1. User Request</h4>
-            <p className="text-xs text-slate-400 mt-1">Select plastic type, estimated kg & pickup slot</p>
+            <button
+              onClick={() => handleDemoAccess('USER')}
+              className="mt-6 py-3 w-full rounded-xl bg-[#edf6f0] hover:bg-[#1b4332] text-[#1b4332] hover:text-white font-bold text-xs transition-colors border border-[#cbe3d3]"
+            >
+              Explore as Citizen →
+            </button>
           </div>
 
-          <div className="glass-card p-5 rounded-2xl text-center border-slate-800">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold mb-3">
-              2
+          <div className="bg-white p-6 rounded-3xl border border-[#e2e8df] shadow-sm hover:border-[#b8cfbf] transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-[#f0f9ff] text-[#0369a1] flex items-center justify-center font-bold text-lg mb-4 border border-[#bae6fd]">
+                🚚
+              </div>
+              <h3 className="font-bold text-base text-[#14231b]">Collector</h3>
+              <p className="text-xs text-[#586a5f] mt-2 leading-relaxed">
+                Receive pickup route assignments, navigate to citizen locations, record digital scale weights, and dispatch to plants.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-white">2. Collector Pickup</h4>
-            <p className="text-xs text-slate-400 mt-1">Collector accepts request & collects waste</p>
+            <button
+              onClick={() => handleDemoAccess('COLLECTOR')}
+              className="mt-6 py-3 w-full rounded-xl bg-[#f0f9ff] hover:bg-[#0369a1] text-[#0369a1] hover:text-white font-bold text-xs transition-colors border border-[#bae6fd]"
+            >
+              Explore as Collector →
+            </button>
           </div>
 
-          <div className="glass-card p-5 rounded-2xl text-center border-slate-800">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold mb-3">
-              3
+          <div className="bg-white p-6 rounded-3xl border border-[#e2e8df] shadow-sm hover:border-[#b8cfbf] transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-[#faf5ff] text-[#6b21a8] flex items-center justify-center font-bold text-lg mb-4 border border-[#e9d5ff]">
+                🏭
+              </div>
+              <h3 className="font-bold text-base text-[#14231b]">Recycling Facility</h3>
+              <p className="text-xs text-[#586a5f] mt-2 leading-relaxed">
+                Accept incoming truck shipments, log processed pellet yields and rejected contaminants, and trigger automated reward payouts.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-white">3. Weight Verification</h4>
-            <p className="text-xs text-slate-400 mt-1">Actual weight & proof image uploaded</p>
+            <button
+              onClick={() => handleDemoAccess('RECYCLER')}
+              className="mt-6 py-3 w-full rounded-xl bg-[#faf5ff] hover:bg-[#6b21a8] text-[#6b21a8] hover:text-white font-bold text-xs transition-colors border border-[#e9d5ff]"
+            >
+              Explore as Recycler →
+            </button>
           </div>
 
-          <div className="glass-card p-5 rounded-2xl text-center border-slate-800">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold mb-3">
-              4
+          <div className="bg-white p-6 rounded-3xl border border-[#e2e8df] shadow-sm hover:border-[#b8cfbf] transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-[#fefce8] text-[#92400e] flex items-center justify-center font-bold text-lg mb-4 border border-[#fde68a]">
+                🛡️
+              </div>
+              <h3 className="font-bold text-base text-[#14231b]">Platform Admin</h3>
+              <p className="text-xs text-[#586a5f] mt-2 leading-relaxed">
+                Dispatch and reassign collectors, audit live user accounts, manage plastic pricing rates, and monitor ecosystem analytics.
+              </p>
             </div>
-            <h4 className="font-bold text-sm text-white">4. Recycling Center</h4>
-            <p className="text-xs text-slate-400 mt-1">Material processed into recycled pellets</p>
-          </div>
-
-          <div className="glass-card p-5 rounded-2xl text-center border-slate-800">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold mb-3">
-              5
-            </div>
-            <h4 className="font-bold text-sm text-white">5. Points & Impact</h4>
-            <p className="text-xs text-slate-400 mt-1">Points credited & CO2 metrics updated</p>
+            <button
+              onClick={() => handleDemoAccess('ADMIN')}
+              className="mt-6 py-3 w-full rounded-xl bg-[#fefce8] hover:bg-[#92400e] text-[#92400e] hover:text-white font-bold text-xs transition-colors border border-[#fde68a]"
+            >
+              Explore as Admin →
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Interactive Impact Calculator */}
-      <section className="py-16 px-4 bg-slate-900/60 border-t border-slate-800/80">
-        <div className="max-w-4xl mx-auto glass-card p-8 rounded-3xl border-emerald-500/30">
-          <div className="flex items-center gap-3 mb-6">
-            <TreePine className="w-7 h-7 text-emerald-400" />
+      {/* Interactive Eco Impact Calculator */}
+      <section className="py-20 px-4 sm:px-8 bg-[#f5f8f5] border-t border-[#e2e8df]">
+        <div className="max-w-4xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-[#dbe6dc] shadow-sm">
+          <div className="flex items-center gap-3.5 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-[#edf6f0] text-[#1b4332] flex items-center justify-center border border-[#cbe3d3]">
+              <TreePine className="w-6 h-6" />
+            </div>
             <div>
-              <h3 className="text-xl font-bold text-white">Interactive Eco Impact Calculator</h3>
-              <p className="text-xs text-slate-400">Estimate your environmental contribution based on EPA WARM standards</p>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-[#14231b] tracking-tight">
+                Interactive Eco Impact Calculator
+              </h3>
+              <p className="text-xs text-[#5c6e62]">
+                Estimate your household or business environmental savings based on EPA WARM lifecycle coefficients.
+              </p>
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div>
-              <div className="flex justify-between text-xs font-semibold mb-2">
-                <span className="text-slate-300">Plastic Waste Weight:</span>
-                <span className="text-emerald-400 font-bold">{calcKg} KG</span>
+          <div className="space-y-8">
+            <div className="bg-[#f8faf8] p-5 rounded-2xl border border-[#e4ebe4]">
+              <div className="flex justify-between items-center text-xs font-bold mb-3">
+                <span className="text-[#3b4b41] uppercase tracking-wider">Plastic Waste Diverted:</span>
+                <span className="text-xl font-extrabold text-[#1b4332] bg-white px-3 py-1 rounded-xl border border-[#cde0d2] shadow-sm">
+                  {calcKg} KG
+                </span>
               </div>
               <input
                 type="range"
@@ -248,26 +314,35 @@ const LandingPage = () => {
                 max="100"
                 value={calcKg}
                 onChange={(e) => setCalcKg(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-2.5 bg-[#dbe6dc] rounded-lg appearance-none cursor-pointer accent-[#1b4332]"
               />
+              <div className="flex justify-between text-[11px] text-[#788a7e] font-semibold mt-2">
+                <span>1 KG</span>
+                <span>50 KG</span>
+                <span>100 KG</span>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
-                <p className="text-xs text-slate-400">CO2 Avoided</p>
-                <p className="text-lg font-bold text-emerald-400 mt-1">{(calcKg * 1.5).toFixed(1)} kg</p>
+              <div className="p-5 rounded-2xl bg-[#edf6f0] border border-[#cbe3d3] text-center">
+                <span className="text-[11px] font-bold text-[#445b4b] uppercase tracking-wider">CO2 Avoided</span>
+                <p className="text-2xl font-extrabold text-[#1b4332] mt-1.5">{(calcKg * 1.5).toFixed(1)} kg</p>
+                <p className="text-[10px] text-[#5c6f62] mt-1 font-medium">Reduced carbon footprint</p>
               </div>
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
-                <p className="text-xs text-slate-400">Energy Saved</p>
-                <p className="text-lg font-bold text-teal-400 mt-1">{(calcKg * 5.77).toFixed(1)} kWh</p>
+              <div className="p-5 rounded-2xl bg-[#f0fdfa] border border-[#99f6e4] text-center">
+                <span className="text-[11px] font-bold text-[#0f766e] uppercase tracking-wider">Energy Saved</span>
+                <p className="text-2xl font-extrabold text-[#0f766e] mt-1.5">{(calcKg * 5.77).toFixed(1)} kWh</p>
+                <p className="text-[10px] text-[#115e59] mt-1 font-medium">Conserved power grid</p>
               </div>
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
-                <p className="text-xs text-slate-400">Trees Equivalent</p>
-                <p className="text-lg font-bold text-amber-400 mt-1">{(calcKg * 0.03).toFixed(2)} trees</p>
+              <div className="p-5 rounded-2xl bg-[#fefce8] border border-[#fde68a] text-center">
+                <span className="text-[11px] font-bold text-[#92400e] uppercase tracking-wider">Trees Equivalent</span>
+                <p className="text-2xl font-extrabold text-[#92400e] mt-1.5">{(calcKg * 0.03).toFixed(2)} trees</p>
+                <p className="text-[10px] text-[#78350f] mt-1 font-medium">Urban forest offset</p>
               </div>
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
-                <p className="text-xs text-slate-400">Est. Reward Points</p>
-                <p className="text-lg font-bold text-purple-400 mt-1">{calcKg * 10} pts</p>
+              <div className="p-5 rounded-2xl bg-[#faf5ff] border border-[#e9d5ff] text-center">
+                <span className="text-[11px] font-bold text-[#6b21a8] uppercase tracking-wider">Reward Points</span>
+                <p className="text-2xl font-extrabold text-[#6b21a8] mt-1.5">+{calcKg * 10} pts</p>
+                <p className="text-[10px] text-[#581c87] mt-1 font-medium">Redeemable for vouchers</p>
               </div>
             </div>
           </div>

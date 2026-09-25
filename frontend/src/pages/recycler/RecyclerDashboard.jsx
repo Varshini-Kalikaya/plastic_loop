@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Factory, Package, CheckCircle2, AlertTriangle, ChevronRight } from 'lucide-react';
+import { Factory, Package, CheckCircle2, AlertTriangle, ChevronRight, ArrowRight } from 'lucide-react';
 import API from '../../services/api';
 import StatCard from '../../components/StatCard';
 import StatusBadge from '../../components/StatusBadge';
@@ -29,24 +29,30 @@ const RecyclerDashboard = () => {
   const { incomingCount, processingCount, completedCount, totalRecycledKg, totalRejectedKg, recentRecords } = data || {};
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="glass-card p-6 sm:p-8 rounded-3xl border border-purple-500/30 flex items-center justify-between">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xs border border-purple-500/30 mb-2">
-            🏭 Recycling Plant Facility
+    <div className="space-y-8 animate-fade-in pb-12">
+      {/* Hero Banner */}
+      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#e2e8df] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="space-y-1.5 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e8f0ea] text-[#1b4332] font-bold text-xs uppercase tracking-wider mb-1">
+            <Factory className="w-3.5 h-3.5 text-[#1b4332]" />
+            <span>Recycling Plant Facility</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white">Material Processing Control</h1>
-          <p className="text-xs text-slate-300 mt-1">Receive incoming shipments, record recycled pellets & credit user reward points.</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#14231b] tracking-tight">Material Processing Control</h1>
+          <p className="text-sm text-[#526458] max-w-xl">
+            Receive incoming collector shipments, record recycled plastic pellets & credit citizen reward points upon batch completion.
+          </p>
         </div>
 
         <Link
           to="/recycler/materials"
-          className="px-6 py-3 rounded-2xl bg-purple-500 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 shadow-xl hover:bg-purple-400 transition-colors"
+          className="relative z-10 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#1b4332] hover:bg-[#2d6a4f] text-white font-bold text-sm shadow-sm transition whitespace-nowrap"
         >
-          Process Materials Queue <ChevronRight className="w-4 h-4" />
+          <span>Process Materials Queue</span>
+          <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 
+      {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Incoming Shipments" value={incomingCount || 0} icon={Package} color="purple" description="Awaiting plant intake" />
         <StatCard title="In Sorting & Processing" value={processingCount || 0} icon={Factory} color="amber" description="Active recycling batch" />
@@ -54,34 +60,45 @@ const RecyclerDashboard = () => {
         <StatCard title="Non-Recyclable Rejected" value={`${totalRejectedKg || 0} KG`} icon={AlertTriangle} color="amber" description="Contaminated waste" />
       </div>
 
-      <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-bold text-base text-white">Incoming Shipments Queue</h3>
-          <Link to="/recycler/materials" className="text-xs font-bold text-purple-400 hover:underline">
-            Manage Processing Queue →
+      {/* Incoming Queue Table */}
+      <div className="bg-white rounded-3xl border border-[#e2e8df] shadow-sm overflow-hidden space-y-0">
+        <div className="p-6 border-b border-[#edf2ec] flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-base text-[#14231b]">Incoming Shipments Queue</h3>
+            <p className="text-xs text-[#718477] mt-0.5">Shipments received from certified collectors ready for recycling</p>
+          </div>
+          <Link to="/recycler/materials" className="text-xs font-bold text-[#1b4332] hover:text-[#2d6a4f] flex items-center gap-1 hover:underline">
+            <span>Manage Processing Queue</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {recentRecords?.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-6">No incoming recycling shipments right now.</p>
+          <div className="text-center py-12 px-4">
+            <div className="w-12 h-12 rounded-full bg-[#e8f0ea] flex items-center justify-center mx-auto mb-3 text-[#1b4332]">
+              <Package className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-semibold text-[#14231b]">No incoming recycling shipments right now</p>
+            <p className="text-xs text-[#718477] mt-1">Dispatched shipments from collectors will arrive here for intake.</p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase">
-                  <th className="py-3.5 px-4">Shipment ID</th>
-                  <th className="py-3.5 px-4">Plastic Type</th>
-                  <th className="py-3.5 px-4">Received Weight</th>
-                  <th className="py-3.5 px-4">Status</th>
+                <tr className="border-b border-[#edf2ec] text-[11px] font-bold text-[#718477] uppercase bg-[#fbfbf9]">
+                  <th className="py-3.5 px-6">Shipment ID</th>
+                  <th className="py-3.5 px-6">Plastic Type</th>
+                  <th className="py-3.5 px-6">Received Weight</th>
+                  <th className="py-3.5 px-6">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-xs text-slate-200">
+              <tbody className="divide-y divide-[#edf2ec] text-xs text-[#14231b]">
                 {recentRecords?.map((r) => (
-                  <tr key={r._id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="py-3.5 px-4 font-mono font-bold text-purple-400">#{r._id.slice(-6).toUpperCase()}</td>
-                    <td className="py-3.5 px-4 font-semibold">{r.plasticTypeId?.name}</td>
-                    <td className="py-3.5 px-4 font-bold text-emerald-400">{r.receivedWeight} KG</td>
-                    <td className="py-3.5 px-4">
+                  <tr key={r._id} className="hover:bg-[#fbfbf9] transition-colors">
+                    <td className="py-4 px-6 font-mono font-bold text-[#1b4332]">#{r._id.slice(-6).toUpperCase()}</td>
+                    <td className="py-4 px-6 font-semibold text-[#14231b]">{r.plasticTypeId?.name || 'Mixed Plastic'}</td>
+                    <td className="py-4 px-6 font-bold text-[#1b4332]">{r.receivedWeight} KG</td>
+                    <td className="py-4 px-6">
                       <StatusBadge status={r.status} />
                     </td>
                   </tr>
