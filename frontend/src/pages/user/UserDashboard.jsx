@@ -19,7 +19,6 @@ import { useAuth } from '../../context/AuthContext';
 import API from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import Dashboard3DBackground from '../../components/Dashboard3DBackground';
 
 const UserDashboard = () => {
   const { user } = useAuth();
@@ -55,8 +54,6 @@ const UserDashboard = () => {
 
   return (
     <div className="relative space-y-8 animate-fade-in max-w-7xl mx-auto">
-      {/* Background Animated Atmosphere (Scoped strictly to Dashboard) */}
-      <Dashboard3DBackground />
 
       {/* 1. Large Editorial Welcome & Impact Hero */}
       <div className="bg-white rounded-3xl border border-[#e2e8df] p-6 sm:p-10 shadow-sm relative z-10 overflow-hidden">

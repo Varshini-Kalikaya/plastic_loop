@@ -17,7 +17,6 @@ import {
   ArrowDown,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import Dashboard3DBackground from '../../components/Dashboard3DBackground';
 
 const LandingPage = () => {
   const { user, demoLogin } = useAuth();
@@ -41,15 +40,11 @@ const LandingPage = () => {
     <div className="min-h-screen bg-[#fbfbf9] text-[#1c241f] flex flex-col selection:bg-[#1b4332] selection:text-white">
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-8 max-w-7xl mx-auto text-center overflow-hidden">
-        {/* 3D Animated Background Scene (Modern & Effective Waste Management) */}
-        <Dashboard3DBackground />
-
         {/* Soft Organic Background Accents */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] h-[34rem] bg-[#edf6f0]/60 rounded-full blur-3xl pointer-events-none -z-10"></div>
-        <div className="absolute top-1/3 right-10 w-72 h-72 bg-[#f4f7eb]/50 rounded-full blur-2xl pointer-events-none -z-10"></div>
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] h-[34rem] bg-[#edf6f0]/80 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <div className="absolute top-1/3 right-10 w-72 h-72 bg-[#f4f7eb]/70 rounded-full blur-2xl pointer-events-none -z-10"></div>
 
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#edf6f0] border border-[#cbe3d3] text-[#1b4332] text-xs font-bold mb-6 shadow-sm">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#edf6f0] border border-[#cbe3d3] text-[#1b4332] text-xs font-bold mb-6 shadow-sm">
           <Sparkles className="w-3.5 h-3.5 text-[#2d6a4f]" />
           <span>Circular Economy Platform for Plastic Waste</span>
         </div>
@@ -78,7 +73,6 @@ const LandingPage = () => {
             <ArrowDown className="w-4 h-4 text-[#2d6a4f]" />
           </button>
         </div>
-      </div>
 
         {/* Live Ecosystem Impact Horizontal Strip */}
         <div className="mt-16 sm:mt-20 max-w-5xl mx-auto bg-white rounded-3xl border border-[#e2e8df] p-6 sm:p-8 shadow-sm">
